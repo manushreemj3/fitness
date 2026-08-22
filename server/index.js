@@ -9,7 +9,10 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI); // Atlas connection string
-
+app.use("/api/workout", workoutRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/food", foodRoutes);
+app.use("/api/cycle", cycleRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/data", dataRoutes);
 

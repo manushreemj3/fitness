@@ -17,8 +17,8 @@ export default function Plan() {
     weeks: 4,
   });
 
-  function finish() {
-    setUser(acceptPlan());
+  async function finish() {
+    setUser(await acceptPlan());
     navigate("/home");
   }
 

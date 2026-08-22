@@ -5,6 +5,11 @@ import User from "../models/User.js";
 
 const router = Router();
 
+router.patch("/me", requireAuth, async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.userId, req.body, { new: true });
+  res.json(user);
+});
+
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
   const exists = await User.findOne({ email: email.toLowerCase() });

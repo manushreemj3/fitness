@@ -1,15 +1,40 @@
-const API = import.meta.env.VITE_API_URL;
+const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
 
 function getToken() {
   return localStorage.getItem("fitbuddy.token");
 }
+
+async function parseResponse(res) {
+  let body = null;
+  try {
+    body = await res.json();
+  } catch {
+    body = {};
+  }
+  if (!res.ok) {
+    throw new Error(body?.error || `Request failed (${res.status})`);
+  }
+  return body;
+}
+
+async function request(path, options = {}) {
+  try {
+    const res = await fetch(`${API}${path}`, options);
+    return await parseResponse(res);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error("Unable to reach the FitBuddy server. Start the backend or check VITE_API_URL.");
+    }
+    throw error;
+  }
+}
+
 export async function requestPasswordReset(email) {
-  const res = await fetch(`${API}/api/auth/forgot-password`, {
+  return request("/api/auth/forgot-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email: email.trim().toLowerCase() }),
   });
-  return res.json(); // { pendingBackend, found, message }
 }
 
 export function googleSignInPlaceholder() {
@@ -18,41 +43,45 @@ export function googleSignInPlaceholder() {
     message: "Google sign-in will be available when the backend is connected.",
   };
 }
-// Cache the user object at login/signup time so other services
-// can still call getCurrentUser() synchronously.
+
 export function getCurrentUser() {
-  const raw = localStorage.getItem("fitbuddy.user");
-  return raw ? JSON.parse(raw) : null;
+  try {
+    const raw = localStorage.getItem("fitbuddy.user");
+    if (!raw) return null;
+    const user = JSON.parse(raw);
+    if (user && !user.id && user._id) user.id = String(user._id);
+    return user;
+  } catch {
+    localStorage.removeItem("fitbuddy.user");
+    return null;
+  }
 }
 
 function cacheUser(user) {
-  localStorage.setItem("fitbuddy.user", JSON.stringify(user));
+  if (user) localStorage.setItem("fitbuddy.user", JSON.stringify(user));
+  else localStorage.removeItem("fitbuddy.user");
 }
 
 export async function signup({ name, email, password }) {
-  const res = await fetch(`${API}/api/auth/signup`, {
+  const data = await request("/api/auth/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase(), password }),
   });
-  if (!res.ok) throw new Error((await res.json()).error);
-  const { token, user } = await res.json();
-  localStorage.setItem("fitbuddy.token", token);
-  cacheUser(user);
-  return user;
+  localStorage.setItem("fitbuddy.token", data.token);
+  cacheUser(data.user);
+  return data.user;
 }
 
 export async function login({ email, password }) {
-  const res = await fetch(`${API}/api/auth/login`, {
+  const data = await request("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
   });
-  if (!res.ok) throw new Error((await res.json()).error);
-  const { token, user } = await res.json();
-  localStorage.setItem("fitbuddy.token", token);
-  cacheUser(user);
-  return user;
+  localStorage.setItem("fitbuddy.token", data.token);
+  cacheUser(data.user);
+  return data.user;
 }
 
 export function logout() {
@@ -61,7 +90,7 @@ export function logout() {
 }
 
 export async function persistUser(updated) {
-  const res = await fetch(`${API}/api/auth/me`, {
+  const data = await request("/api/auth/me", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -69,9 +98,8 @@ export async function persistUser(updated) {
     },
     body: JSON.stringify(updated),
   });
-  const user = await res.json();
-  cacheUser(user);
-  return user;
+  cacheUser(data.user || data);
+  return data.user || data;
 }
 
 export function getSession() {

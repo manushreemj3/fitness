@@ -14,8 +14,9 @@ export default function Profile() {
     ...user.profile,
   });
 
-  function save() {
-    const next = updateAccount({
+  async function save() {
+    try {
+      const next = await updateAccount({
       name: form.name,
       profile: {
         age: form.age,
@@ -31,20 +32,27 @@ export default function Profile() {
         periodDuration: form.periodDuration,
       },
     });
-    setUser(next);
-    setEditing(false);
-    toast("Profile updated");
+      setUser(next);
+      setEditing(false);
+      toast("Profile updated");
+    } catch (error) {
+      toast(error.message);
+    }
   }
 
-  function setCompanion(partial) {
-    const next = updateCompanion(partial);
+  async function setCompanion(partial) {
+    try {
+      const next = await updateCompanion(partial);
     setUser(next);
     if (partial.color) {
       toast(`UI Theme changed to ${labelFor(COMPANION_COLORS, partial.color)}`);
     } else if (partial.accessory) {
       toast(`Accessory changed to ${labelFor(COMPANION_ACCESSORIES, partial.accessory)}`);
-    } else {
-      toast("Companion updated");
+      } else {
+        toast("Companion updated");
+      }
+    } catch (error) {
+      toast(error.message);
     }
   }
 

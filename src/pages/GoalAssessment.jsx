@@ -26,8 +26,8 @@ export default function GoalAssessment() {
     return () => clearTimeout(timer);
   }, [phase, profile]);
 
-  function accept(assessment) {
-    const nextUser = saveGoalAssessment({
+  async function accept(assessment) {
+    const nextUser = await saveGoalAssessment({
       ...assessment,
       acceptedAdjustment: !assessment.feasible,
       acceptedAt: new Date().toISOString(),

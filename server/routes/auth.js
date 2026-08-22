@@ -10,6 +10,16 @@ router.patch("/me", requireAuth, async (req, res) => {
   res.json(user);
 });
 
+router.post("/forgot-password", async (req, res) => {
+  const user = await User.findOne({ email: req.body.email.toLowerCase() });
+  // TODO: send real email via a mail provider
+  res.json({
+    pendingBackend: true,
+    found: Boolean(user),
+    message: "Password reset will be sent from the FitBuddy backend once it is connected.",
+  });
+});
+
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
   const exists = await User.findOne({ email: email.toLowerCase() });

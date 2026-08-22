@@ -2,7 +2,7 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-
+import { requireAuth } from "../middleware/auth.js";
 const router = Router();
 
 router.patch("/me", requireAuth, async (req, res) => {

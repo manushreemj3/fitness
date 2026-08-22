@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { analyzeFood, saveFoodLog } from "../services/foodService";
 import { useToast } from "../context/ToastContext";
 
@@ -8,16 +8,31 @@ export default function FoodUpload({ onSaved }) {
   const [result, setResult] = useState(null);
   const [busy, setBusy] = useState(false);
 
+  useEffect(() => () => {
+    if (preview) URL.revokeObjectURL(preview);
+  }, [preview]);
+
   async function onFile(file) {
     if (!file) return;
-    setPreview(URL.createObjectURL(file));
+    const nextPreview = URL.createObjectURL(file);
+    setPreview((old) => {
+      if (old) URL.revokeObjectURL(old);
+      return nextPreview;
+    });
+    setResult(null);
     setBusy(true);
-    const analysis = await analyzeFood(file);
-    setResult(analysis);
-    saveFoodLog({ ...analysis, imageName: file.name });
-    onSaved?.(analysis);
-    setBusy(false);
-    toast("Meal logged with estimated nutrition.");
+
+    try {
+      const analysis = await analyzeFood(file);
+      setResult(analysis);
+      saveFoodLog({ ...analysis, imageName: file.name });
+      onSaved?.(analysis);
+      toast("Meal logged with estimated nutrition.");
+    } catch (error) {
+      toast(error.message);
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -29,7 +44,10 @@ export default function FoodUpload({ onSaved }) {
           accept="image/*"
           capture="environment"
           hidden
-          onChange={(e) => onFile(e.target.files?.[0])}
+          onChange={(e) => {
+            onFile(e.target.files?.[0]);
+            e.target.value = "";
+          }}
         />
       </label>
       {preview && <img className="food-preview" src={preview} alt="Meal preview" />}

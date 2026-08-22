@@ -154,10 +154,11 @@ export default function Mental() {
             <div className="cycle-banner" style={{ background: "#fff1f6", borderLeft: "4px solid #db2777", marginTop: 16 }}>
               <strong style={{ color: "#831843", fontSize: 16 }}>Emergency & Lifelines</strong>
               <ul style={{ margin: "10px 0 0", paddingLeft: 20, color: "#47152a", lineHeight: 1.6 }}>
-                <li><strong>National Crisis & Suicide Lifeline:</strong> Call or text <strong>988</strong></li>
-                <li><strong>Crisis Text Line:</strong> Text <strong>HOME</strong> to <strong>741741</strong></li>
-                <li><strong>International Emergency:</strong> Call your local emergency services (911 / 112 / 999)</li>
+                <li><strong>Immediate danger:</strong> Contact your local emergency services now.</li>
+                <li><strong>Crisis support:</strong> Use a crisis service available in your country.</li>
+                <li><strong>International directory:</strong> The International Association for Suicide Prevention can help locate local services.</li>
               </ul>
+              <a href="https://www.iasp.info/suicidalthoughts/" target="_blank" rel="noreferrer">Find local crisis support</a>
             </div>
 
             <h3 style={{ marginTop: 20 }}>Grounding Technique (5-4-3-2-1)</h3>

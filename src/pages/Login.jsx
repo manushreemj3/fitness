@@ -26,12 +26,12 @@ export default function Login() {
     return !Object.keys(next).length;
   }
 
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
     setFormError("");
     if (!validate()) return;
     try {
-      const user = login({ email, password });
+      const user = await login({ email, password });
       if (!user.onboardingComplete) navigate("/onboarding");
       else if (!user.goalAssessment) navigate("/goal-assessment");
       else if (!user.planAccepted) navigate("/plan");

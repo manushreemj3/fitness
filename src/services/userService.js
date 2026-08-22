@@ -6,42 +6,35 @@ export function getUser() {
   return getCurrentUser();
 }
 
-export function updateProfile(partial) {
+export async function updateProfile(partial) {
   const user = getCurrentUser();
   if (!user) throw new Error("Not signed in.");
-  const next = {
+  return persistUser({
     ...user,
-    profile: { ...user.profile, ...partial },
-  };
-  return persistUser(next);
+    profile: { ...(user.profile || {}), ...partial },
+  });
 }
 
-export function completeOnboarding(profile) {
+export async function completeOnboarding(profile) {
   const user = getCurrentUser();
   if (!user) throw new Error("Not signed in.");
   return persistUser({
     ...user,
     onboardingComplete: true,
-    profile: { ...user.profile, ...profile },
+    profile: { ...(user.profile || {}), ...profile },
   });
 }
 
-export function saveGoalAssessment(assessment) {
+export async function saveGoalAssessment(assessment) {
   const user = getCurrentUser();
   if (!user) throw new Error("Not signed in.");
-  return persistUser({
-    ...user,
-    goalAssessment: assessment,
-  });
+  return persistUser({ ...user, goalAssessment: assessment });
 }
 
-export function acceptPlan() {
+export async function acceptPlan() {
   const user = getCurrentUser();
   if (!user) throw new Error("Not signed in.");
-  return persistUser({
-    ...user,
-    planAccepted: true,
-  });
+  return persistUser({ ...user, planAccepted: true });
 }
 
 export function applyUITheme(color) {
@@ -50,34 +43,30 @@ export function applyUITheme(color) {
   }
 }
 
-export function updateCompanion(companion) {
+export async function updateCompanion(companion) {
   const user = getCurrentUser();
   if (!user) throw new Error("Not signed in.");
-  const updatedCompanion = { ...user.companion, ...companion };
-  if (updatedCompanion.color) {
-    applyUITheme(updatedCompanion.color);
-  }
+  const updatedCompanion = { ...(user.companion || {}), ...companion };
+  if (updatedCompanion.color) applyUITheme(updatedCompanion.color);
   if (companion.accessory) {
     localStorage.setItem(ACCESSORY_STORAGE_KEY, companion.accessory);
   }
-  return persistUser({
-    ...user,
-    companion: updatedCompanion,
-  });
+  return persistUser({ ...user, companion: updatedCompanion });
 }
 
-export function updateAccount({ name, profile }) {
+export async function updateAccount({ name, profile }) {
   const user = getCurrentUser();
   if (!user) throw new Error("Not signed in.");
   return persistUser({
     ...user,
-    name: name ?? user.name,
-    profile: { ...user.profile, ...profile },
+    name: name?.trim() || user.name,
+    profile: { ...(user.profile || {}), ...profile },
   });
 }
 
-export function greetingForName(name) {
+export function greetingForName(name = "there") {
   const hour = new Date().getHours();
   const hello = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-  return `${hello}, ${name.split(" ")[0]}`;
+  const firstName = String(name).trim().split(/\s+/)[0] || "there";
+  return `${hello}, ${firstName}`;
 }

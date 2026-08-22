@@ -7,10 +7,14 @@ export default function ForgotPassword() {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
 
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
-    const result = requestPasswordReset(email);
-    toast(result.message);
+    try {
+      const result = await requestPasswordReset(email);
+      toast(result.message);
+    } catch (error) {
+      toast(error.message);
+    }
   }
 
   return (

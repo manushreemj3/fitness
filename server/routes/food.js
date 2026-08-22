@@ -5,21 +5,33 @@ import Hydration from "../models/Hydration.js";
 
 const router = Router();
 router.use(requireAuth);
-const today = () => new Date().toISOString().slice(0, 10);
+
+function today() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 router.get("/logs", async (req, res) => {
-  res.json(await FoodLog.find({ userId: req.userId, date: today() }));
+  res.json(await FoodLog.find({ userId: req.userId, date: today() }).sort({ createdAt: -1 }));
 });
 
 router.post("/logs", async (req, res) => {
-  res.json(await FoodLog.create({ ...req.body, userId: req.userId, date: today() }));
+  const allowed = ["name", "calories", "protein", "carbohydrates", "fat", "imageName"];
+  const payload = Object.fromEntries(
+    allowed.filter((key) => Object.prototype.hasOwnProperty.call(req.body || {}, key))
+      .map((key) => [key, req.body[key]])
+  );
+  res.status(201).json(await FoodLog.create({ ...payload, userId: req.userId, date: today() }));
 });
 
 router.get("/hydration", async (req, res) => {
   const doc = await Hydration.findOneAndUpdate(
     { userId: req.userId, date: today() },
     { $setOnInsert: { glasses: 0, goal: 8 } },
-    { upsert: true, new: true }
+    { upsert: true, new: true, setDefaultsOnInsert: true }
   );
   res.json(doc);
 });
@@ -27,9 +39,14 @@ router.get("/hydration", async (req, res) => {
 router.post("/hydration/add", async (req, res) => {
   const doc = await Hydration.findOneAndUpdate(
     { userId: req.userId, date: today() },
-    [{ $set: { glasses: { $min: ["$goal", { $add: ["$glasses", 1] }] } } }],
-    { upsert: true, new: true }
+    { $inc: { glasses: 1 }, $setOnInsert: { goal: 8 } },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
   );
+
+  if (doc.glasses > doc.goal) {
+    doc.glasses = doc.goal;
+    await doc.save();
+  }
   res.json(doc);
 });
 

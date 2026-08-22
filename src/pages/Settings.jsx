@@ -20,13 +20,17 @@ export default function Settings() {
     toast("Reminder preference saved");
   }
 
-  function setBot(partial) {
-    const next = updateCompanion(partial);
-    setUser(next);
+  async function setBot(partial) {
+    try {
+      const next = await updateCompanion(partial);
+      setUser(next);
     if (partial.color) {
       toast(`UI Theme changed to ${labelFor(COMPANION_COLORS, partial.color)}`);
-    } else if (partial.accessory) {
-      toast(`Accessory changed to ${labelFor(COMPANION_ACCESSORIES, partial.accessory)}`);
+      } else if (partial.accessory) {
+        toast(`Accessory changed to ${labelFor(COMPANION_ACCESSORIES, partial.accessory)}`);
+      }
+    } catch (error) {
+      toast(error.message);
     }
   }
 
@@ -91,7 +95,7 @@ export default function Settings() {
       <label className="toggle-row"><span>Mood check-in</span><input type="checkbox" checked={reminders.mood} onChange={() => toggle("mood")} /></label>
 
       <h3>Privacy</h3>
-      <p className="disclaimer">This MVP stores your data in this browser only. A future backend can replace local storage without changing these screens.</p>
+      <p className="disclaimer">This MVP keeps a local cache for fast UI updates and syncs account/profile changes through the FitBuddy backend when it is configured.</p>
 
       <h3>Data disclaimer</h3>
       <p className="disclaimer">Nutrition estimates are approximate.</p>

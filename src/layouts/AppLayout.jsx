@@ -5,6 +5,7 @@ import { greetingForName } from "../services/userService";
 const TITLES = {
   "/home": ["", "Here’s your personalized plan for today"],
   "/physical": ["Physical Mode", "Your workout, food and hydration in one place."],
+  "/nutrition": ["Nutrition Mode", "Meals, hydration and calories for today."],
   "/mental": ["Mental Mode", "A calmer space to check in with yourself."],
   "/profile": ["Your Profile", "Your personal fitness and wellbeing details."],
   "/settings": ["Settings", "Manage your FitBuddy preferences."],
@@ -31,6 +32,7 @@ export default function AppLayout() {
         <nav className="nav">
           <NavLink to="/home" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>⌂</span>Home</NavLink>
           <NavLink to="/physical" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>◈</span>Physical</NavLink>
+          <NavLink to="/nutrition" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>🍎</span>Nutrition</NavLink>
           <NavLink to="/mental" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>☯</span>Mental</NavLink>
           <NavLink to="/profile" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>♙</span>Profile</NavLink>
           <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>⚙</span>Settings</NavLink>

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Companion from "../components/Companion";
 import { useAuth } from "../context/AuthContext";
-import { completeOnboarding, updateCompanion } from "../services/userService";
+import { applyUITheme, completeOnboarding, updateCompanion } from "../services/userService";
 import {
   ACTIVITY_LEVELS,
   COMPANION_ACCESSORIES,
@@ -64,21 +64,34 @@ export default function Onboarding() {
 
   function handleColorChange(colorId) {
     setBotColor(colorId);
-    updateCompanion({ color: colorId });
+    applyUITheme(colorId);
   }
 
   function validateStep() {
     if (step === 1) {
+      const age = Number(data.age);
+      const height = Number(data.heightCm);
+      const weight = Number(data.weightKg);
       if (!data.age || !data.gender || !data.heightCm || !data.weightKg) return "Please complete your basic information.";
-      if (Number(data.age) < 13 || Number(data.age) > 100) return "Enter a realistic age.";
+      if (!Number.isFinite(age) || age < 13 || age > 100) return "Enter a realistic age.";
+      if (!Number.isFinite(height) || height < 80 || height > 250) return "Enter a realistic height.";
+      if (!Number.isFinite(weight) || weight < 25 || weight > 350) return "Enter a realistic weight.";
     }
     if (step === 2 && (!data.activityLevel || !data.goal)) return "Choose your activity level and goal.";
     if (step === 3) {
       if (!data.timelineWeeks) return "Choose a timeline.";
       if (data.goal !== "general-fitness" && !data.targetWeightKg) return "Add a target weight, or choose general fitness.";
+      if (data.goal !== "general-fitness") {
+        const target = Number(data.targetWeightKg);
+        if (!Number.isFinite(target) || target < 25 || target > 350) return "Enter a realistic target weight.";
+      }
     }
     if (step === 4 && data.gender === "female") {
       if (!data.lastPeriodDate || !data.cycleLength || !data.periodDuration) return "Please complete cycle details, or go back and change gender.";
+      const cycleLength = Number(data.cycleLength);
+      const periodDuration = Number(data.periodDuration);
+      if (cycleLength < 21 || cycleLength > 45) return "Cycle length should be between 21 and 45 days.";
+      if (periodDuration < 1 || periodDuration > 10 || periodDuration >= cycleLength) return "Enter a valid period duration.";
     }
     if (step === 5 && (!data.mood || !data.stress || !data.sleep || !data.cope || !data.wellbeing)) {
       return "Pick an option for each wellbeing question.";
@@ -101,11 +114,15 @@ export default function Onboarding() {
     setStep(steps[Math.max(0, idx - 1)]);
   }
 
-  function finish() {
-    updateCompanion({ name: botName || "FitBuddy", color: botColor, accessory: botAccessory });
-    const nextUser = completeOnboarding(data);
-    setUser(nextUser);
-    navigate("/goal-assessment");
+  async function finish() {
+    try {
+      await updateCompanion({ name: botName || "FitBuddy", color: botColor, accessory: botAccessory });
+      const nextUser = await completeOnboarding(data);
+      setUser(nextUser);
+      navigate("/goal-assessment");
+    } catch (error) {
+      setError(error.message);
+    }
   }
 
   function Choice({ list, value, field }) {

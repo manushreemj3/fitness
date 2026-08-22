@@ -29,12 +29,12 @@ export default function Signup() {
     return !Object.keys(next).length;
   }
 
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
     setFormError("");
     if (!validate()) return;
     try {
-      signup({ name: form.name, email: form.email, password: form.password });
+      await signup({ name: form.name, email: form.email, password: form.password });
       navigate("/onboarding");
     } catch (err) {
       setFormError(err.message);

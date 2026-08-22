@@ -12,6 +12,7 @@ import GoalAssessment from "./pages/GoalAssessment";
 import Plan from "./pages/Plan";
 import Home from "./pages/Home";
 import Physical from "./pages/Physical";
+import Nutrition from "./pages/Nutrition";
 import Mental from "./pages/Mental";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -64,6 +65,7 @@ export default function App() {
         >
           <Route path="/home" element={<Home />} />
           <Route path="/physical" element={<Physical />} />
+          <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/mental" element={<Mental />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />

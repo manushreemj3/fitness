@@ -133,10 +133,11 @@ function cycleAwareAdjust(day, inPeriodWindow) {
 
 export function generateWorkoutPlan({ goal = "general-fitness", weeks = 4, inPeriodWindow = false } = {}) {
   const source = TEMPLATES[goal] || TEMPLATES["general-fitness"];
+  const safeWeeks = Math.min(52, Math.max(1, Number.parseInt(weeks, 10) || 4));
   const plan = {
     generatedAt: new Date().toISOString(),
     source: "frontend-template",
-    weeks: Array.from({ length: weeks }, (_, weekIndex) => {
+    weeks: Array.from({ length: safeWeeks }, (_, weekIndex) => {
       const rotated = rotate(source, weekIndex);
       return {
         week: weekIndex + 1,
@@ -181,6 +182,7 @@ export function getProgress() {
 }
 
 export function toggleWorkoutComplete(workoutId) {
+  if (!workoutId) return getProgress();
   const progress = getProgress();
   progress.workouts[workoutId] = !progress.workouts[workoutId];
   const user = getCurrentUser();
@@ -189,6 +191,7 @@ export function toggleWorkoutComplete(workoutId) {
 }
 
 export function toggleExerciseComplete(exerciseId) {
+  if (!exerciseId) return getProgress();
   const progress = getProgress();
   progress.exercises[exerciseId] = !progress.exercises[exerciseId];
   const user = getCurrentUser();

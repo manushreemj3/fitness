@@ -8,8 +8,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => authService.getCurrentUser());
 
   useEffect(() => {
-    const color = user?.companion?.color || "lavender";
-    applyUITheme(color);
+    applyUITheme(user?.companion?.color || "lavender");
   }, [user?.companion?.color]);
 
   const value = useMemo(() => ({
@@ -17,13 +16,13 @@ export function AuthProvider({ children }) {
     refresh() {
       setUser(authService.getCurrentUser());
     },
-    signup(payload) {
-      const next = authService.signup(payload);
+    async signup(payload) {
+      const next = await authService.signup(payload);
       setUser(next);
       return next;
     },
-    login(payload) {
-      const next = authService.login(payload);
+    async login(payload) {
+      const next = await authService.login(payload);
       setUser(next);
       return next;
     },

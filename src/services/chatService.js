@@ -19,6 +19,10 @@ const MOCK_REPLIES = {
     "Thanks for telling me. Let’s keep this simple: one slow breath, then one small next step you can actually do.",
     "Overwhelm is a lot to carry. A short walk or a five-minute stretch can be enough for now.",
   ],
+  nutrition: [
+    "A balanced plate is usually protein, a carb source, and something colorful. What did your last meal look like?",
+    "Hydration counts as nutrition too — have you had water in the last couple hours?",
+  ],
 };
 
 function pickReply(mode, text) {
@@ -40,6 +44,15 @@ function pickReply(mode, text) {
   }
   if (/talk|listen|chat/i.test(lower)) {
     return "I’m right here listening without any judgment. Tell me whatever is on your mind — take all the time you need.";
+  }
+  if (/protein|carbs|calorie|meal|diet/i.test(lower)) {
+    return "Focus on consistency over perfection — a simple plate with protein, veggies, and a carb source covers most bases. What are you eating today?";
+  }
+  if (/hungry|snack|craving/i.test(lower)) {
+    return "Cravings often mean your body wants either fuel or comfort. A quick protein + fruit snack can settle both.";
+  }
+  if (/water|hydrate|thirsty/i.test(lower)) {
+    return "Good call checking in on hydration. Aim for a glass now and space out a few more through the day.";
   }
   if (/bicep|curl/i.test(text)) {
     return "If today’s session still has energy left, light bicep curls can fit after the main work. Keep the weight comfortable and stop if form slips.";

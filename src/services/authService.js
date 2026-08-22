@@ -3,7 +3,21 @@ const API = import.meta.env.VITE_API_URL;
 function getToken() {
   return localStorage.getItem("fitbuddy.token");
 }
+export async function requestPasswordReset(email) {
+  const res = await fetch(`${API}/api/auth/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  return res.json(); // { pendingBackend, found, message }
+}
 
+export function googleSignInPlaceholder() {
+  return {
+    pendingBackend: true,
+    message: "Google sign-in will be available when the backend is connected.",
+  };
+}
 // Cache the user object at login/signup time so other services
 // can still call getCurrentUser() synchronously.
 export function getCurrentUser() {

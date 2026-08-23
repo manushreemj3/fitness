@@ -14,8 +14,12 @@ export default function CompanionChat({
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    const existing = getChatHistory(mode);
-    setMessages(existing.length ? existing : seedChat(mode, opener));
+    let active = true;
+    (async () => {
+      const existing = await getChatHistory(mode);
+      if (active) setMessages(existing.length ? existing : seedChat(mode, opener));
+    })();
+    return () => { active = false; };
   }, [mode, opener]);
 
   async function onSubmit(event) {
@@ -56,7 +60,7 @@ export default function CompanionChat({
           ))}
         </div>
       ))}
-      <p className="disclaimer">Replies are frontend placeholders until a real companion API is connected.</p>
+      <p className="disclaimer">AI guidance is general wellbeing support, not medical diagnosis or treatment.</p>
       <form className="chat-input" onSubmit={onSubmit}>
         <input
           value={text}

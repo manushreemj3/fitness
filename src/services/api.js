@@ -1,21 +1,37 @@
 const API = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
 
-export function getApiToken() {
-  return localStorage.getItem("fitbuddy.token") || "";
+function getToken() {
+  return localStorage.getItem("fitbuddy.token");
+}
+
+async function parseResponse(response) {
+  const text = await response.text();
+  let body = {};
+  try { body = text ? JSON.parse(text) : {}; } catch { body = {}; }
+
+  if (!response.ok) {
+    const error = new Error(body?.error || `Request failed (${response.status})`);
+    error.status = response.status;
+    throw error;
+  }
+  return body;
 }
 
 export async function apiRequest(path, options = {}) {
   const headers = new Headers(options.headers || {});
-  if (options.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
-  const token = getApiToken();
-  if (token) headers.set("Authorization", `Bearer ${token}`);
-  let response;
+  if (!headers.has("Content-Type") && options.body) headers.set("Content-Type", "application/json");
+  const token = getToken();
+  if (token && !headers.has("Authorization")) headers.set("Authorization", `Bearer ${token}`);
+
   try {
-    response = await fetch(`${API}${path}`, { ...options, headers });
-  } catch {
-    throw new Error("Unable to reach the FitBuddy server. Start the backend or check VITE_API_URL.");
+    const response = await fetch(`${API}${path}`, { ...options, headers });
+    return await parseResponse(response);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error("Unable to reach the FitBuddy server. Check VITE_API_URL and the backend deployment.");
+    }
+    throw error;
   }
-  const body = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(body?.error || `Request failed (${response.status})`);
-  return body;
 }
+
+export { API };

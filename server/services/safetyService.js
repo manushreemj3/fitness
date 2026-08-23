@@ -8,6 +8,7 @@ const CRISIS_PATTERNS = [
   /hurt\s+myself/i,
   /self[-\s]?harm/i,
   /want\s+to\s+die/i,
+  /kms/i
 ];
 
 export function detectCrisis(text) {

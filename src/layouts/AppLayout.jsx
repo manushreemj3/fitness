@@ -9,6 +9,7 @@ const TITLES = {
   "/mental": ["Mental Mode", "A calmer space to check in with yourself."],
   "/profile": ["Your Profile", "Your personal fitness and wellbeing details."],
   "/settings": ["Settings", "Manage your FitBuddy preferences."],
+  "/progress": ["Progress", "See your recent fitness and wellbeing trends."],
 };
 
 export default function AppLayout() {
@@ -35,6 +36,7 @@ export default function AppLayout() {
           <NavLink to="/nutrition" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>🍎</span>Nutrition</NavLink>
           <NavLink to="/mental" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>☯</span>Mental</NavLink>
           <NavLink to="/profile" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>♙</span>Profile</NavLink>
+          <NavLink to="/progress" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>📈</span>Progress</NavLink>
           <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>⚙</span>Settings</NavLink>
         </nav>
       </aside>

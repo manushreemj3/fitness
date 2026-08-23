@@ -6,6 +6,7 @@ import workoutRoutes from "./routes/workout.js";
 import chatRoutes from "./routes/chat.js";
 import foodRoutes from "./routes/food.js";
 import cycleRoutes from "./routes/cycle.js";
+import analyticsRoutes from "./routes/analytics.js";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
@@ -39,6 +40,7 @@ app.use("/api/workout", workoutRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/food", foodRoutes);
 app.use("/api/cycle", cycleRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

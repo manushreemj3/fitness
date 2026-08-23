@@ -8,6 +8,7 @@ export default function CompanionChat({ mode = "home", opener = "Hey! What can I
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -22,11 +23,28 @@ export default function CompanionChat({ mode = "home", opener = "Hey! What can I
     event.preventDefault();
     const value = text.trim();
     if (!value || sending) return;
+
     setText("");
+    setError("");
     setSending(true);
+
+    // Show the user's message immediately so the UI never looks dead.
+    setMessages((current) => [
+      ...current,
+      { id: crypto.randomUUID(), role: "user", text: value, at: new Date().toISOString() },
+    ]);
+
     try {
       const result = await sendChatMessage({ mode, text: value });
-      if (result?.history) setMessages(result.history);
+      if (result?.history) {
+        setMessages(result.history);
+      } else {
+        setError("FitBuddy didn't return a response.");
+      }
+      if (result?.error) setError(result.error);
+    } catch (error) {
+      console.error("Chat send failed:", error);
+      setError(error?.message || "Unable to send message.");
     } finally {
       setSending(false);
     }
@@ -48,6 +66,7 @@ export default function CompanionChat({ mode = "home", opener = "Hey! What can I
         ))}
         {sending && <div className="message bot" aria-label="FitBuddy is typing">FitBuddy is thinking…</div>}
       </div>
+      {error && <div className="chat-error" role="alert">{error}</div>}
       <p className="disclaimer">AI guidance is general wellbeing support, not medical diagnosis or treatment.</p>
       <form className="chat-input" onSubmit={onSubmit}>
         <input value={text} onChange={(e) => setText(e.target.value)} placeholder={placeholder} disabled={sending} autoComplete="off" />

@@ -64,10 +64,19 @@ router.get("/weekly-report", async (req, res, next) => {
   try {
     const overview = await buildOverview(req.userId);
     let report = `You completed ${overview.totals.workouts} workout(s) in the last 7 days. You logged ${Math.round(overview.totals.calories)} kcal and ${Math.round(overview.totals.protein)} g protein. Hydration totaled ${Math.round(overview.totals.water)} glasses. Keep focusing on consistency rather than perfection.`;
+    let aiUsed = false;
     if (hasGemini()) {
-      report = await generateContent({ prompt: `Create a concise FitBuddy weekly fitness/wellbeing report from this data. Include: wins, areas to improve, and 3 practical next-week actions. Do not diagnose health conditions and do not invent missing data. Clearly say when a metric is unavailable.\n\n${JSON.stringify(overview)}` }) || report;
+      try {
+        const aiReport = await generateContent({ prompt: `Create a concise FitBuddy weekly fitness/wellbeing report from this data. Include: wins, areas to improve, and 3 practical next-week actions. Do not diagnose health conditions and do not invent missing data. Clearly say when a metric is unavailable.\n\n${JSON.stringify(overview)}` });
+        if (aiReport) {
+          report = aiReport;
+          aiUsed = true;
+        }
+      } catch (aiError) {
+        console.error("Gemini weekly report error:", aiError.message);
+      }
     }
-    res.json({ report, overview, aiEnabled: hasGemini() });
+    res.json({ report, overview, aiEnabled: hasGemini(), aiUsed });
   } catch (error) { next(error); }
 });
 

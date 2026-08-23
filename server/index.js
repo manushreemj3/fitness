@@ -10,7 +10,10 @@ import analyticsRoutes from "./routes/analytics.js";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
-const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173").split(",").map((value) => value.trim()).filter(Boolean);
+const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map((value) => value.trim().replace(/\/$/, ""))
+  .filter(Boolean);
 
 if (!process.env.MONGODB_URI) {
   console.warn("MONGODB_URI is not set. The API will not be able to persist data.");

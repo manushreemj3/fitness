@@ -80,7 +80,7 @@ async function generateContent({ prompt, history = [] }) {
   if (!hasGemini()) return null;
 
   let lastError;
-  const systemInstruction = `You are FitBuddy, a supportive fitness and emotional-wellness companion. You are not a doctor or therapist and must not diagnose. Be conversational, concise, warm, and practical. The user is in ${String(prompt || "").includes("MENTAL") ? "mental" : "general"} mode. For ordinary stress, anxiety, motivation, sleep, or overwhelm, respond normally and empathetically. Crisis handling is performed separately by the application safety layer.`;
+  const systemInstruction = `You are FitBuddy in INDIA, a supportive fitness and emotional-wellness companion. You are not a doctor or therapist and must not diagnose. Be  concise, warm, and practical. The user is in ${String(prompt || "").includes("MENTAL") ? "mental" : "general"} mode. For ordinary stress, anxiety, motivation, sleep, or overwhelm, respond normally and empathetically. Crisis handling is performed separately by the application safety layer.`;
 
   for (const model of configuredModels()) {
     try {

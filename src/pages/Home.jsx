@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Companion from "../components/Companion";
 import CompanionChat from "../components/CompanionChat";
@@ -18,9 +18,22 @@ export default function Home() {
   const { toast } = useToast();
   const [chatOpen, setChatOpen] = useState(false);
   const [foodOpen, setFoodOpen] = useState(false);
-  const [hydration, setHydration] = useState(getHydration());
+  const [hydration, setHydration] = useState({ glasses: 0, goal: 8 });
   const [mood, setMood] = useState(getMood()?.mood || user.profile.mood || "");
-  const logs = getFoodLogs();
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    Promise.all([getFoodLogs(), getHydration()])
+      .then(([foodLogs, water]) => {
+        setLogs(Array.isArray(foodLogs) ? foodLogs : []);
+        setHydration(water && typeof water === "object" ? water : { glasses: 0, goal: 8 });
+      })
+      .catch(() => {
+        setLogs([]);
+        setHydration({ glasses: 0, goal: 8 });
+      });
+  }, []);
+
   const calories = totalCalories(logs);
   const plan = getWorkoutPlan();
   const today = getTodayWorkout(plan);
@@ -66,8 +79,12 @@ export default function Home() {
             <button
               className="glasses"
               onClick={() => {
-                setHydration(addWater());
-                toast("Water logged");
+                addWater()
+                  .then((next) => {
+                    setHydration(next && typeof next === "object" ? next : hydration);
+                    toast("Water logged");
+                  })
+                  .catch((error) => toast(error.message));
               }}
             >
               {glasses}

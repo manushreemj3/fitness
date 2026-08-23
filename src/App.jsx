@@ -16,6 +16,7 @@ import Nutrition from "./pages/Nutrition";
 import Mental from "./pages/Mental";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Progress from "./pages/Progress";
 
 export default function App() {
   return (
@@ -69,6 +70,7 @@ export default function App() {
           <Route path="/mental" element={<Mental />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/progress" element={<Progress />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

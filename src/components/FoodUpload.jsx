@@ -25,8 +25,8 @@ export default function FoodUpload({ onSaved }) {
     try {
       const analysis = await analyzeFood(file);
       setResult(analysis);
-      saveFoodLog({ ...analysis, imageName: file.name });
-      onSaved?.(analysis);
+      const saved = await saveFoodLog({ ...analysis, imageName: file.name });
+      onSaved?.(saved);
       toast("Meal logged with estimated nutrition.");
     } catch (error) {
       toast(error.message);
@@ -61,7 +61,7 @@ export default function FoodUpload({ onSaved }) {
             <div><small>Carbs</small><strong>{result.carbohydrates} g</strong></div>
             <div><small>Fat</small><strong>{result.fat} g</strong></div>
           </div>
-          <p><strong>Suggestion for your goal</strong><br />{result.suggestion}</p>
+          <p><strong>Portion:</strong> {result.portion}</p><p><strong>Confidence:</strong> {result.confidence}</p><p>{result.notes}</p>
         </div>
       )}
     </div>

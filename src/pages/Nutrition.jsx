@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CompanionChat from "../components/CompanionChat";
 import FoodUpload from "../components/FoodUpload";
 import { useToast } from "../context/ToastContext";
@@ -13,8 +13,12 @@ export default function Nutrition() {
   const { toast } = useToast();
   const [chatOpen, setChatOpen] = useState(false);
   const [foodOpen, setFoodOpen] = useState(false);
-  const [logs, setLogs] = useState(getFoodLogs());
-  const [hydration, setHydration] = useState(getHydration());
+  const [logs, setLogs] = useState([]);
+  const [hydration, setHydration] = useState({ glasses: 0, goal: 8 });
+
+  useEffect(() => {
+    Promise.all([getFoodLogs(), getHydration()]).then(([foodLogs, water]) => { setLogs(foodLogs); setHydration(water); }).catch((error) => toast(error.message));
+  }, []);
 
   const calories = useMemo(() => totalCalories(logs), [logs]);
 
@@ -53,8 +57,7 @@ export default function Nutrition() {
           <button
             className="secondary-btn"
             onClick={() => {
-              setHydration(addWater());
-              toast("Water logged");
+              addWater().then((next) => { setHydration(next); toast("Water logged"); }).catch((error) => toast(error.message));
             }}
           >
             + Add water
@@ -89,7 +92,7 @@ export default function Nutrition() {
             <h2>Log a meal</h2>
             <FoodUpload
               onSaved={() => {
-                setLogs(getFoodLogs());
+                getFoodLogs().then(setLogs).catch((error) => toast(error.message));
               }}
             />
           </div>

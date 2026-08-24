@@ -8,6 +8,7 @@ const router = Router();
 router.use(requireAuth);
 
 const VALID_MODES = new Set(["home", "physical", "mental", "nutrition"]);
+const VALID_LANGUAGES = new Set(["en", "kn", "hi"]);
 
 function modeInstruction(mode) {
   const instructions = {
@@ -31,10 +32,11 @@ router.get("/:mode", async (req, res) => {
 });
 
 router.post("/:mode", async (req, res) => {
-  const { text } = req.body || {};
+  const { text, language = "en" } = req.body || {};
   const { mode } = req.params;
   if (!VALID_MODES.has(mode)) return res.status(400).json({ error: "Invalid chat mode" });
   if (typeof text !== "string" || !text.trim()) return res.status(400).json({ error: "Message is required" });
+  const selectedLanguage = VALID_LANGUAGES.has(language) ? language : "en";
   if (text.length > 4000) return res.status(400).json({ error: "Message is too long" });
 
   const value = text.trim();
@@ -49,8 +51,13 @@ router.post("/:mode", async (req, res) => {
     if (hasGemini()) {
       const recent = await ChatMessage.find({ userId: req.userId, mode }).sort({ createdAt: -1 }).limit(12).lean();
       recent.reverse();
-      const context = [modeInstruction(mode), "User message: " + value].join("\n\n");
-      reply = await generateContent({ prompt: context, history: recent });
+      const languageInstruction = selectedLanguage === "kn"
+        ? "Respond entirely in Kannada (ಕನ್ನಡ). Keep fitness and nutrition terms understandable."
+        : selectedLanguage === "hi"
+          ? "Respond entirely in Hindi (हिन्दी). Keep fitness and nutrition terms understandable."
+          : "Respond in English.";
+      const context = [modeInstruction(mode), languageInstruction, "User message: " + value].join("\n\n");
+      reply = await generateContent({ prompt: context, history: recent, language: selectedLanguage });
     }
 
     if (!reply) {

@@ -225,7 +225,27 @@ export default function ExerciseLibrary() {
   <Icon name={muscleIcons[exercise.muscle]} size={42} />
 </div>
                   <span className={`difficulty-pill ${exercise.difficulty.toLowerCase()}`}>{localized(exercise.difficulty, t)}</span>
-                  <button className={`exercise-favorite ${favorite ? "active" : ""}`} onClick={() => toggleFavorite(exercise.id)} aria-label="Favorite exercise">{favorite ? "Saved" : "Save"}</button>
+                  <button
+  type="button"
+  className={`exercise-favorite ${favorite ? "active" : ""}`}
+  onClick={() => toggleFavorite(exercise.id)}
+  aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+  title={favorite ? "Remove from favorites" : "Add to favorites"}
+>
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 24 24"
+    fill={favorite ? "currentColor" : "none"}
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </svg>
+</button>
                 </div>
                 <div className="exercise-card-content">
                   <div className="exercise-card-title improved-title"><div><h3>{exercise.name}</h3><p>{exercise.muscle}</p></div></div>

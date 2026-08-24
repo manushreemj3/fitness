@@ -1,24 +1,24 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { greetingForName } from "../services/userService";
+import { useLanguage } from "../context/LanguageContext";
 
-const TITLES = {
-  "/home": ["", "Here’s your personalized plan for today"],
-  "/physical": ["Physical Mode", "Your workout, food and hydration in one place."],
-  "/nutrition": ["Nutrition Mode", "Meals, hydration and calories for today."],
-  "/mental": ["Mental Mode", "A calmer space to check in with yourself."],
-  "/profile": ["Your Profile", "Your personal fitness and wellbeing details."],
-  "/settings": ["Settings", "Manage your FitBuddy preferences."],
-  "/progress": ["Progress", "See your recent fitness and wellbeing trends."],
+const TITLE_KEYS = {
+  "/home": ["", "homeSubtitle"],
+  "/physical": ["physicalTitle", "physicalSubtitle"],
+  "/nutrition": ["nutritionTitle", "nutritionSubtitle"],
+  "/mental": ["mentalTitle", "mentalSubtitle"],
+  "/profile": ["profileTitle", "profileSubtitle"],
+  "/settings": ["settingsTitle", "settingsSubtitle"],
+  "/exercises": ["exerciseLibrary", "exerciseLibrarySubtitle"],
 };
 
 export default function AppLayout() {
   const { user } = useAuth();
   const location = useLocation();
-  const meta = TITLES[location.pathname] || ["FitBuddy", ""];
-  const title = location.pathname === "/home"
-    ? `${greetingForName(user.name)} `
-    : meta[0];
+  const { t } = useLanguage();
+  const meta = TITLE_KEYS[location.pathname] || ["", ""];
+  const title = location.pathname === "/home" ? `${greetingForName(user.name)} ` : t(meta[0], "FitBuddy");
 
   return (
     <div className="app-shell">
@@ -31,13 +31,13 @@ export default function AppLayout() {
           </div>
         </div>
         <nav className="nav">
-          <NavLink to="/home" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>⌂</span>Home</NavLink>
-          <NavLink to="/physical" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>◈</span>Physical</NavLink>
-          <NavLink to="/nutrition" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>🍎</span>Nutrition</NavLink>
-          <NavLink to="/mental" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>☯</span>Mental</NavLink>
-          <NavLink to="/profile" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>♙</span>Profile</NavLink>
-          <NavLink to="/progress" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>📈</span>Progress</NavLink>
-          <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>⚙</span>Settings</NavLink>
+          <NavLink to="/home" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>⌂</span>{t("home")}</NavLink>
+          <NavLink to="/physical" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>◈</span>{t("physical")}</NavLink>
+          <NavLink to="/nutrition" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>🍎</span>{t("nutrition")}</NavLink>
+          <NavLink to="/mental" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>☯</span>{t("mental")}</NavLink>
+          <NavLink to="/profile" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>♙</span>{t("profile")}</NavLink>
+          <NavLink to="/exercises" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>🏋</span>{t("exercises")}</NavLink>
+          <NavLink to="/settings" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}><span>⚙</span>{t("settings")}</NavLink>
         </nav>
       </aside>
       <main className="main">
@@ -45,7 +45,7 @@ export default function AppLayout() {
           <header className="topbar">
             <div>
               <h1>{title}</h1>
-              <p>{meta[1]}</p>
+              <p>{t(meta[1], "")}</p>
             </div>
             <div className="top-actions">
               <NavLink to="/profile" className="avatar">{user.name[0].toUpperCase()}</NavLink>

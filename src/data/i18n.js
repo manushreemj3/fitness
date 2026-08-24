@@ -1,0 +1,73 @@
+export const LANGUAGES = [
+  { id: "en", label: "English", native: "English", flag: "🇬🇧" },
+  { id: "kn", label: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳" },
+  { id: "hi", label: "Hindi", native: "हिन्दी", flag: "🇮🇳" },
+];
+
+const en = {
+  home: "Home", homeSubtitle: "Here’s your personalized plan for today", physical: "Physical", nutrition: "Nutrition", mental: "Mental", profile: "Profile", settings: "Settings", exercises: "Exercises",
+  physicalTitle: "Physical Mode", physicalSubtitle: "Your workout, food and hydration in one place.",
+  nutritionTitle: "Nutrition Mode", nutritionSubtitle: "Meals, hydration and calories for today.",
+  mentalTitle: "Mental Mode", mentalSubtitle: "A calmer space to check in with yourself.",
+  profileTitle: "Your Profile", profileSubtitle: "Your personal fitness and wellbeing details.",
+  settingsTitle: "Settings", settingsSubtitle: "Manage your FitBuddy preferences.",
+  exerciseLibrary: "Exercise Library", exerciseLibrarySubtitle: "Find an exercise that fits your goal, equipment and experience.",
+  searchExercises: "Search exercises...", muscle: "Muscle", equipment: "Equipment", difficulty: "Difficulty", exerciseType: "Exercise type", all: "All",
+  clearFilters: "Clear filters", exercisesFound: "exercises found", noExercises: "No exercises match those filters.",
+  beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced",
+  strength: "Strength", cardio: "Cardio", mobility: "Mobility", flexibility: "Flexibility", core: "Core", plyometric: "Plyometric", balance: "Balance",
+  bodyweight: "Bodyweight", dumbbells: "Dumbbells", barbell: "Barbell", cable: "Cable", machine: "Machine", band: "Resistance band", kettlebell: "Kettlebell", bench: "Bench", pullup: "Pull-up bar", cardioMachine: "Cardio machine", otherEquipment: "Other",
+  viewInstructions: "View instructions", hideInstructions: "Hide instructions", primaryMuscle: "Primary muscle", howTo: "How to perform", tip: "Tip",
+  language: "Language", chooseLanguage: "Choose your language", languageSaved: "Language preference saved",
+  english: "English", kannada: "ಕನ್ನಡ", hindi: "हिन्दी",
+  uiTheme: "FitBuddy & UI Theme", notifications: "Notifications", privacy: "Privacy", dataDisclaimer: "Data disclaimer",
+  companionName: "Companion Name", uiThemeColor: "UI Theme Color", accessory: "Accessory", hydrationReminder: "Hydration reminder", workoutReminder: "Workout reminder", moodCheckIn: "Mood check-in",
+  save: "Save", cancel: "Cancel", logout: "Logout", profileUpdated: "Profile updated", reminderSaved: "Reminder preference saved",
+  noData: "No data logged", estimated: "Estimated", close: "Close", loading: "Loading...",
+};
+
+const kn = {
+  home: "ಮುಖಪುಟ", homeSubtitle: "ಇಂದಿನ ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಯೋಜನೆ ಇಲ್ಲಿದೆ", physical: "ದೈಹಿಕ", nutrition: "ಪೋಷಣೆ", mental: "ಮಾನಸಿಕ", profile: "ಪ್ರೊಫೈಲ್", settings: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು", exercises: "ವ್ಯಾಯಾಮಗಳು",
+  physicalTitle: "ದೈಹಿಕ ಮೋಡ್", physicalSubtitle: "ವ್ಯಾಯಾಮ, ಆಹಾರ ಮತ್ತು ನೀರನ್ನು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ನಿರ್ವಹಿಸಿ.",
+  nutritionTitle: "ಪೋಷಣಾ ಮೋಡ್", nutritionSubtitle: "ಇಂದಿನ ಊಟ, ನೀರು ಮತ್ತು ಕ್ಯಾಲೊರಿಗಳು.",
+  mentalTitle: "ಮಾನಸಿಕ ಮೋಡ್", mentalSubtitle: "ನಿಮ್ಮ ಭಾವನೆಗಳನ್ನು ಪರಿಶೀಲಿಸಲು ಶಾಂತ ಸ್ಥಳ.",
+  profileTitle: "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್", profileSubtitle: "ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಫಿಟ್‌ನೆಸ್ ಮತ್ತು ಕ್ಷೇಮ ವಿವರಗಳು.",
+  settingsTitle: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು", settingsSubtitle: "ನಿಮ್ಮ FitBuddy ಆದ್ಯತೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ.",
+  exerciseLibrary: "ವ್ಯಾಯಾಮ ಗ್ರಂಥಾಲಯ", exerciseLibrarySubtitle: "ನಿಮ್ಮ ಗುರಿ, ಉಪಕರಣ ಮತ್ತು ಅನುಭವಕ್ಕೆ ಹೊಂದುವ ವ್ಯಾಯಾಮವನ್ನು ಹುಡುಕಿ.",
+  searchExercises: "ವ್ಯಾಯಾಮಗಳನ್ನು ಹುಡುಕಿ...", muscle: "ಸ್ನಾಯು", equipment: "ಉಪಕರಣ", difficulty: "ಕಷ್ಟದ ಮಟ್ಟ", exerciseType: "ವ್ಯಾಯಾಮದ ಪ್ರಕಾರ", all: "ಎಲ್ಲಾ",
+  clearFilters: "ಫಿಲ್ಟರ್ ತೆರವುಗೊಳಿಸಿ", exercisesFound: "ವ್ಯಾಯಾಮಗಳು ಕಂಡುಬಂದಿವೆ", noExercises: "ಈ ಫಿಲ್ಟರ್‌ಗಳಿಗೆ ಯಾವುದೇ ವ್ಯಾಯಾಮ ಹೊಂದಿಕೆಯಾಗಿಲ್ಲ.",
+  beginner: "ಆರಂಭಿಕ", intermediate: "ಮಧ್ಯಮ", advanced: "ಮುನ್ನಡೆದ",
+  strength: "ಶಕ್ತಿ", cardio: "ಕಾರ್ಡಿಯೋ", mobility: "ಚಲನೆ", flexibility: "ಲವಚಿಕತೆ", core: "ಕೋರ್", plyometric: "ಪ್ಲಯೋಮೆಟ್ರಿಕ್", balance: "ಸಮತೋಲನ",
+  bodyweight: "ದೇಹದ ತೂಕ", dumbbells: "ಡಂಬ್‌ಬೆಲ್‌ಗಳು", barbell: "ಬಾರ್ಬೆಲ್", cable: "ಕೇಬಲ್", machine: "ಮಷಿನ್", band: "ರೆಸಿಸ್ಟೆನ್ಸ್ ಬ್ಯಾಂಡ್", kettlebell: "ಕೆಟಲ್‌ಬೆಲ್", bench: "ಬೆಂಚ್", pullup: "ಪುಲ್-ಅಪ್ ಬಾರ್", cardioMachine: "ಕಾರ್ಡಿಯೋ ಮಷಿನ್", otherEquipment: "ಇತರೆ",
+  viewInstructions: "ವಿಧಾನ ನೋಡಿ", hideInstructions: "ವಿಧಾನ ಮರೆಮಾಡಿ", primaryMuscle: "ಮುಖ್ಯ ಸ್ನಾಯು", howTo: "ಹೇಗೆ ಮಾಡುವುದು", tip: "ಸಲಹೆ",
+  language: "ಭಾಷೆ", chooseLanguage: "ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ", languageSaved: "ಭಾಷೆಯ ಆದ್ಯತೆ ಉಳಿಸಲಾಗಿದೆ",
+  english: "English", kannada: "ಕನ್ನಡ", hindi: "ಹिन्दी",
+  uiTheme: "FitBuddy ಮತ್ತು UI ಥೀಮ್", notifications: "ಅಧಿಸೂಚನೆಗಳು", privacy: "ಗೌಪ್ಯತೆ", dataDisclaimer: "ಡೇಟಾ ಸೂಚನೆ",
+  companionName: "ಕಂಪ್ಯಾನಿಯನ್ ಹೆಸರು", uiThemeColor: "UI ಥೀಮ್ ಬಣ್ಣ", accessory: "ಆಕ್ಸೆಸರಿ", hydrationReminder: "ನೀರಿನ ಜ್ಞಾಪನೆ", workoutReminder: "ವ್ಯಾಯಾಮ ಜ್ಞಾಪನೆ", moodCheckIn: "ಮನಸ್ಥಿತಿ ಪರಿಶೀಲನೆ",
+  save: "ಉಳಿಸಿ", cancel: "ರದ್ದುಮಾಡಿ", logout: "ಲಾಗ್ ಔಟ್", profileUpdated: "ಪ್ರೊಫೈಲ್ ನವೀಕರಿಸಲಾಗಿದೆ", reminderSaved: "ಜ್ಞಾಪನೆ ಆದ್ಯತೆ ಉಳಿಸಲಾಗಿದೆ",
+  noData: "ಯಾವುದೇ ಡೇಟಾ ದಾಖಲಾಗಿಲ್ಲ", estimated: "ಅಂದಾಜು", close: "ಮುಚ್ಚಿ", loading: "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+};
+
+const hi = {
+  home: "होम", homeSubtitle: "आज की आपकी व्यक्तिगत योजना", physical: "फिजिकल", nutrition: "पोषण", mental: "मानसिक", profile: "प्रोफ़ाइल", settings: "सेटिंग्स", exercises: "एक्सरसाइज़",
+  physicalTitle: "फिजिकल मोड", physicalSubtitle: "वर्कआउट, खाना और हाइड्रेशन एक ही जगह।",
+  nutritionTitle: "पोषण मोड", nutritionSubtitle: "आज के भोजन, पानी और कैलोरी।",
+  mentalTitle: "मानसिक मोड", mentalSubtitle: "अपने मन की स्थिति जानने के लिए एक शांत जगह।",
+  profileTitle: "आपकी प्रोफ़ाइल", profileSubtitle: "आपकी व्यक्तिगत फिटनेस और वेलनेस जानकारी।",
+  settingsTitle: "सेटिंग्स", settingsSubtitle: "अपनी FitBuddy प्राथमिकताएँ प्रबंधित करें।",
+  exerciseLibrary: "एक्सरसाइज़ लाइब्रेरी", exerciseLibrarySubtitle: "अपने लक्ष्य, उपकरण और अनुभव के अनुसार एक्सरसाइज़ खोजें।",
+  searchExercises: "एक्सरसाइज़ खोजें...", muscle: "मसल", equipment: "उपकरण", difficulty: "कठिनाई", exerciseType: "एक्सरसाइज़ प्रकार", all: "सभी",
+  clearFilters: "फ़िल्टर साफ़ करें", exercisesFound: "एक्सरसाइज़ मिलीं", noExercises: "इन फ़िल्टर के लिए कोई एक्सरसाइज़ नहीं मिली।",
+  beginner: "शुरुआती", intermediate: "मध्यम", advanced: "उन्नत",
+  strength: "स्ट्रेंथ", cardio: "कार्डियो", mobility: "मोबिलिटी", flexibility: "लचीलापन", core: "कोर", plyometric: "प्लायोमेट्रिक", balance: "संतुलन",
+  bodyweight: "बॉडीवेट", dumbbells: "डम्बल", barbell: "बारबेल", cable: "केबल", machine: "मशीन", band: "रेज़िस्टेंस बैंड", kettlebell: "केटलबेल", bench: "बेंच", pullup: "पुल-अप बार", cardioMachine: "कार्डियो मशीन", otherEquipment: "अन्य",
+  viewInstructions: "निर्देश देखें", hideInstructions: "निर्देश छिपाएँ", primaryMuscle: "मुख्य मसल", howTo: "कैसे करें", tip: "सुझाव",
+  language: "भाषा", chooseLanguage: "अपनी भाषा चुनें", languageSaved: "भाषा की प्राथमिकता सेव हो गई",
+  english: "English", kannada: "ಕನ್ನಡ", hindi: "हिन्दी",
+  uiTheme: "FitBuddy और UI थीम", notifications: "नोटिफिकेशन", privacy: "प्राइवेसी", dataDisclaimer: "डेटा जानकारी",
+  companionName: "कम्पैनियन नाम", uiThemeColor: "UI थीम रंग", accessory: "एक्सेसरी", hydrationReminder: "हाइड्रेशन रिमाइंडर", workoutReminder: "वर्कआउट रिमाइंडर", moodCheckIn: "मूड चेक-इन",
+  save: "सेव", cancel: "रद्द करें", logout: "लॉग आउट", profileUpdated: "प्रोफ़ाइल अपडेट हो गई", reminderSaved: "रिमाइंडर प्राथमिकता सेव हो गई",
+  noData: "कोई डेटा दर्ज नहीं", estimated: "अनुमानित", close: "बंद करें", loading: "लोड हो रहा है...",
+};
+
+export const TRANSLATIONS = { en, kn, hi };

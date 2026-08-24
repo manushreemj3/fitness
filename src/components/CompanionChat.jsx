@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import Companion from "./Companion";
 import { useAuth } from "../context/AuthContext";
 import { getChatHistory, seedChat, sendChatMessage } from "../services/chatService";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function CompanionChat({ mode = "home", opener = "Hey! What can I help you with today?", placeholder = "Ask FitBuddy..." }) {
   const { user } = useAuth();
+  const { language, t } = useLanguage();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -35,7 +37,7 @@ export default function CompanionChat({ mode = "home", opener = "Hey! What can I
     ]);
 
     try {
-      const result = await sendChatMessage({ mode, text: value });
+      const result = await sendChatMessage({ mode, text: value, language });
       if (result?.history) {
         setMessages(result.history);
       } else {
@@ -64,7 +66,7 @@ export default function CompanionChat({ mode = "home", opener = "Hey! What can I
             {message.resources?.map((resource) => <div key={resource.href}><a href={resource.href} target="_blank" rel="noreferrer">{resource.label}</a></div>)}
           </div>
         ))}
-        {sending && <div className="message bot" aria-label="FitBuddy is typing">FitBuddy is thinking…</div>}
+        {sending && <div className="message bot" aria-label="FitBuddy is typing">{t("loading")}</div>}
       </div>
       {error && <div className="chat-error" role="alert">{error}</div>}
       <p className="disclaimer">AI guidance is general wellbeing support, not medical diagnosis or treatment.</p>

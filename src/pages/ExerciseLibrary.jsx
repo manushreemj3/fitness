@@ -8,8 +8,129 @@ const labelMap = {
   Bodyweight: "bodyweight", Dumbbells: "dumbbells", Barbell: "barbell", Cable: "cable", Machine: "machine", "Resistance band": "band", Kettlebell: "kettlebell", Bench: "bench", "Pull-up bar": "pullup", "Cardio machine": "cardioMachine", Other: "otherEquipment",
 };
 
-const icons = { Chest: "", Back: "", Shoulders: "", Biceps: "", Triceps: "", Quadriceps: "", Hamstrings: "", Glutes: "", Calves: "", Core: "", "Lower Back": "", Hips: "", "Full Body": "" };
-const typeIcons = { Strength: "", Cardio: "", Mobility: "", Flexibility: "", Core: "", Plyometric: "", Balance: "" };
+function Icon({ name, size = 24 }) {
+  const paths = {
+    chest: (
+      <>
+        <path d="M5 8c2-2 4-2 7 0 3-2 5-2 7 0" />
+        <path d="M7 9v7M17 9v7M7 13h10" />
+      </>
+    ),
+    back: (
+      <>
+        <path d="M9 4c0 3-1 4-2 6v8h10v-8c-1-2-2-3-2-6" />
+        <path d="M9 8h6M10 12h4M9 16h6" />
+      </>
+    ),
+    shoulders: (
+      <>
+        <path d="M8 5 4 8l2 5 3-2v8h6v-8l3 2 2-5-4-3" />
+      </>
+    ),
+    arms: (
+      <>
+        <path d="M8 6c-1 3-3 4-4 7l3 2 3-5" />
+        <path d="M16 6c1 3 3 4 4 7l-3 2-3-5" />
+      </>
+    ),
+    legs: (
+      <>
+        <path d="M9 5v7l-2 8M15 5v7l2 8" />
+        <path d="M9 12h6" />
+      </>
+    ),
+    core: (
+      <>
+        <rect x="7" y="5" width="10" height="14" rx="3" />
+        <path d="M7 9h10M7 14h10" />
+      </>
+    ),
+    fullBody: (
+      <>
+        <circle cx="12" cy="4" r="2.5" />
+        <path d="M12 7v6M8 9l4 3 4-3M9 19l3-6 3 6" />
+      </>
+    ),
+    strength: (
+      <>
+        <path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10" />
+      </>
+    ),
+    cardio: (
+      <>
+        <path d="M4 13h4l2-5 3 9 2-4h5" />
+      </>
+    ),
+    mobility: (
+      <>
+        <path d="M6 18c4-8 8-8 12-12" />
+        <path d="M14 6h4v4" />
+        <path d="M10 18H6v-4" />
+      </>
+    ),
+    flexibility: (
+      <>
+        <path d="M6 17c3-7 6-9 12-11" />
+        <path d="M6 17h5M18 6v5" />
+      </>
+    ),
+    plyometric: (
+      <>
+        <path d="M12 3v5M8 5l4 3 4-3M7 14l5-6 5 6M9 20l3-6 3 6" />
+      </>
+    ),
+    balance: (
+      <>
+        <circle cx="12" cy="4" r="2" />
+        <path d="M12 7v7M12 10l-5 3M12 10l5 3M12 14l-5 5M12 14l5 5" />
+      </>
+    ),
+  };
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {paths[name] || paths.fullBody}
+    </svg>
+  );
+}
+
+const muscleIcons = {
+  Chest: "chest",
+  Back: "back",
+  Shoulders: "shoulders",
+  Biceps: "arms",
+  Triceps: "arms",
+  Quadriceps: "legs",
+  Hamstrings: "legs",
+  Glutes: "legs",
+  Calves: "legs",
+  Core: "core",
+  "Lower Back": "back",
+  Hips: "legs",
+  "Full Body": "fullBody",
+};
+
+const typeIcons = {
+  Strength: "strength",
+  Cardio: "cardio",
+  Mobility: "mobility",
+  Flexibility: "flexibility",
+  Core: "core",
+  Plyometric: "plyometric",
+  Balance: "balance",
+};
+
+
 
 function localized(value, t) { return t(labelMap[value] || value.toLowerCase().replace(/[^a-z]+/g, ""), value); }
 
@@ -100,13 +221,18 @@ export default function ExerciseLibrary() {
             return (
               <article className={`exercise-library-card improved-card ${open ? "open" : ""}`} key={exercise.id}>
                 <div className="exercise-card-cover">
-                  <div className="exercise-big-icon">{icons[exercise.muscle] || ""}</div>
+                  <div className="exercise-big-icon">
+  <Icon name={muscleIcons[exercise.muscle]} size={42} />
+</div>
                   <span className={`difficulty-pill ${exercise.difficulty.toLowerCase()}`}>{localized(exercise.difficulty, t)}</span>
                   <button className={`exercise-favorite ${favorite ? "active" : ""}`} onClick={() => toggleFavorite(exercise.id)} aria-label="Favorite exercise">{favorite ? "Saved" : "Save"}</button>
                 </div>
                 <div className="exercise-card-content">
                   <div className="exercise-card-title improved-title"><div><h3>{exercise.name}</h3><p>{exercise.muscle}</p></div></div>
-                  <div className="exercise-meta-grid"><span>{typeIcons[exercise.type] || ""} {localized(exercise.type, t)}</span><span> {localized(exercise.equipment, t)}</span></div>
+                  <div className="exercise-meta-grid"><span className="exercise-meta-item">
+  <Icon name="strength" size={16} />
+  {localized(exercise.equipment, t)}
+</span><span> {localized(exercise.equipment, t)}</span></div>
                   <button className="exercise-details-btn" onClick={() => setOpenId(open ? null : exercise.id)}>{open ? "Hide details ↑" : "View exercise details →"}</button>
                   {open && <div className="exercise-details-panel"><div><strong>Primary muscle</strong><span>{exercise.muscle}</span></div><div><strong>How to perform</strong><p>{exercise.description}</p></div><div><strong>FitBuddy tip</strong><p>{exercise.tip}</p></div></div>}
                 </div>

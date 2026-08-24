@@ -45,7 +45,7 @@ export async function getChatHistory(mode) {
   return user ? normalizeHistory(read(chatKey(user.id, mode), [])) : [];
 }
 
-export async function sendChatMessage({ mode = "home", text }) {
+export async function sendChatMessage({ mode = "home", text, language = "en" }) {
   const value = String(text || "").trim();
   if (!value) return { history: await getChatHistory(mode), crisis: false };
 
@@ -65,7 +65,7 @@ export async function sendChatMessage({ mode = "home", text }) {
     try {
       const result = await apiRequest(`/api/chat/${encodeURIComponent(mode)}`, {
         method: "POST",
-        body: JSON.stringify({ text: value }),
+        body: JSON.stringify({ text: value, language }),
       });
       return { ...result, history: normalizeHistory(result?.history || next), crisis: true };
     } catch {
@@ -76,7 +76,7 @@ export async function sendChatMessage({ mode = "home", text }) {
   try {
     const result = await apiRequest(`/api/chat/${encodeURIComponent(mode)}`, {
       method: "POST",
-      body: JSON.stringify({ text: value }),
+      body: JSON.stringify({ text: value, language }),
     });
     const next = normalizeHistory(result?.history);
     if (user && next.length) write(chatKey(user.id, mode), next);

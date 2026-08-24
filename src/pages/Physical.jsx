@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import CompanionChat from "../components/CompanionChat";
 import CycleCareBanner from "../components/CycleCareBanner";
 import FoodUpload from "../components/FoodUpload";
@@ -20,9 +21,7 @@ export default function Physical() {
   const { toast } = useToast();
   const [chatOpen, setChatOpen] = useState(false);
   const [foodOpen, setFoodOpen] = useState(false);
-  const [hydration, setHydration] = useState({ glasses: 0, goal: 8 });
-
-  useEffect(() => { getHydration().then(setHydration).catch((error) => toast(error.message)); }, []);
+  const [hydration, setHydration] = useState(getHydration());
   const [progress, setProgress] = useState(getProgress());
   const today = getTodayWorkout(getWorkoutPlan());
   const cycle = getCycleStatus(user.profile);
@@ -79,13 +78,19 @@ export default function Physical() {
           <h3>Hydration</h3>
           <strong className="big-number">{hydration.glasses} / {hydration.goal}</strong>
           <p>glasses</p>
-          <button className="secondary-btn" onClick={() => { addWater().then((next) => { setHydration(next); toast("Water logged"); }).catch((error) => toast(error.message)); }}>+ Add water</button>
+          <button className="secondary-btn" onClick={() => { setHydration(addWater()); toast("Water logged"); }}>+ Add water</button>
         </div>
         <div className="feature-card">
           <span className="feature-icon pink-icon">🍎</span>
           <h3>Food tracking</h3>
           <p>Upload a meal photo and get an estimated nutrition breakdown.</p>
           <button className="secondary-btn" onClick={() => setFoodOpen(true)}>Upload food</button>
+        </div>
+        <div className="feature-card">
+          <span className="feature-icon">📚</span>
+          <h3>Exercise library</h3>
+          <p>Browse exercises by muscle, equipment, difficulty and type.</p>
+          <Link className="secondary-btn" style={{ display: "inline-block", textDecoration: "none" }} to="/exercises">Browse exercises</Link>
         </div>
         <div className="feature-card">
           <span className="feature-icon">💬</span>
